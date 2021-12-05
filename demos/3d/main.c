@@ -1,7 +1,7 @@
 #include "SDL.h"
 #include "SDL_gpu.h"
-#include "SDL_gpu_OpenGL_1.h"
-#include "glew.h"
+#include "SDL_gpu_OpenGL_3.h"
+// #include "glew.h"
 #include <stdlib.h>
 
 
@@ -15,8 +15,8 @@ Uint32 v, f, p;
 void begin_3d(GPU_Target* screen)
 {
     GPU_FlushBlitBuffer();
-    
-    
+
+
     GPU_MatrixMode(screen, GPU_MODEL);
     GPU_PushMatrix();
     GPU_LoadIdentity();
@@ -31,7 +31,7 @@ void begin_3d(GPU_Target* screen)
 void end_3d(GPU_Target* screen)
 {
     GPU_ResetRendererState();
-    
+
     GPU_MatrixMode(screen, GPU_MODEL);
     GPU_PopMatrix();
     GPU_MatrixMode(screen, GPU_VIEW);
@@ -53,22 +53,22 @@ void draw_spinning_triangle(GPU_Target* screen)
     gldata[0] = 0;
     gldata[1] = 0.2f;
     gldata[2] = 0;
-    
+
     gldata[3] = 1.0f;
     gldata[4] = 0.0f;
     gldata[5] = 0.0f;
     gldata[6] = 1.0f;
-    
-    
+
+
     gldata[7] = -0.2f;
     gldata[8] = -0.2f;
     gldata[9] = 0;
-    
+
     gldata[10] = 0.0f;
     gldata[11] = 1.0f;
     gldata[12] = 0.0f;
     gldata[13] = 1.0f;
-    
+
     gldata[14] = 0.2f;
     gldata[15] = -0.2f;
     gldata[16] = 0;
@@ -76,20 +76,20 @@ void draw_spinning_triangle(GPU_Target* screen)
     gldata[18] = 0.0f;
     gldata[19] = 1.0f;
     gldata[20] = 1.0f;
-    
-    
+
+
     glUseProgram(p);
-    
+
     GPU_GetModelViewProjection(mvp);
     glUniformMatrix4fv(modelViewProjection_loc, 1, 0, mvp);
-    
-    
+
+
     glEnableVertexAttribArray(vertex_loc);
     glEnableVertexAttribArray(color_loc);
-    
+
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(gldata), gldata, GL_STREAM_DRAW);
-    
+
     glVertexAttribPointer(
        vertex_loc,
        3,                  // size
@@ -98,7 +98,7 @@ void draw_spinning_triangle(GPU_Target* screen)
        sizeof(float)*7,    // stride
        (void*)0            // offset
     );
-    
+
     glVertexAttribPointer(
        color_loc,
        4,                      // size
@@ -107,9 +107,9 @@ void draw_spinning_triangle(GPU_Target* screen)
        sizeof(float)*7,        // stride
        (void*)(sizeof(float)*3)  // offset
     );
-    
+
     glDrawArrays(GL_TRIANGLES, 0, 3);
-     
+
     glDisableVertexAttribArray(color_loc);
     glDisableVertexAttribArray(vertex_loc);
 }
@@ -117,9 +117,9 @@ void draw_spinning_triangle(GPU_Target* screen)
 void draw_3d_stuff(GPU_Target* screen)
 {
     begin_3d(screen);
-    
+
     draw_spinning_triangle(screen);
-    
+
     end_3d(screen);
 }
 
@@ -127,33 +127,33 @@ void draw_more_3d_stuff(GPU_Target* screen)
 {
 	float t;
     begin_3d(screen);
-    
+
     t = SDL_GetTicks()/1000.0f;
     GPU_Rotate(t*60, 0, 0, 1);
     GPU_Translate(0.4f, 0.4f, 0);
     draw_spinning_triangle(screen);
-    
+
     end_3d(screen);
 }
 
 int main(int argc, char* argv[])
 {
 	GPU_Target* screen;
-	
+
 	GPU_SetRequiredFeatures(GPU_FEATURE_BASIC_SHADERS);
-	screen = GPU_InitRenderer(GPU_RENDERER_OPENGL_1, 800, 600, GPU_DEFAULT_INIT_FLAGS);
+	screen = GPU_InitRenderer(GPU_RENDERER_OPENGL_3, 800, 600, GPU_DEFAULT_INIT_FLAGS);
 	if(screen == NULL)
     {
         GPU_LogError("Initialization Error: Could not create a renderer with proper feature support for this demo.\n");
 		return 1;
     }
-    
-    glewExperimental = GL_TRUE;  // Force GLEW to get exported functions instead of checking via extension string
-    if(glewInit() != GLEW_OK)
-    {
-        GPU_LogError("Initialization Error: Failed to initialize GLEW.\n");
-        return 2;
-    }
+
+    // glewExperimental = GL_TRUE;  // Force GLEW to get exported functions instead of checking via extension string
+    // if(glewInit() != GLEW_OK)
+    // {
+    //     GPU_LogError("Initialization Error: Failed to initialize GLEW.\n");
+    //     return 2;
+    // }
 
 	{
 		GPU_Image* image;
@@ -173,16 +173,16 @@ int main(int argc, char* argv[])
 		image = GPU_LoadImage("data/test.bmp");
 		if (image == NULL)
 			return 3;
-        
+
         v = GPU_LoadShader(GPU_VERTEX_SHADER, "data/shaders/untextured.vert");
         f = GPU_LoadShader(GPU_FRAGMENT_SHADER, "data/shaders/untextured.frag");
         p = GPU_LinkShaders(v, f);
-        
+
         glUseProgram(p);
         vertex_loc = GPU_GetAttributeLocation(p, "gpu_Vertex");
         color_loc = GPU_GetAttributeLocation(p, "gpu_Color");
         modelViewProjection_loc = GPU_GetUniformLocation(p, "gpu_ModelViewProjectionMatrix");
-        
+
         glGenBuffers(1, &VBO);
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
@@ -255,20 +255,21 @@ int main(int argc, char* argv[])
 
 			GPU_Clear(screen);
 
-			draw_3d_stuff(screen);
+			// draw_3d_stuff(screen);
 
 			for (i = 0; i < numSprites; i++)
 			{
 				GPU_Blit(image, NULL, screen, x[i], y[i]);
 			}
 
-			draw_more_3d_stuff(screen);
+			// draw_more_3d_stuff(screen);
 
 			GPU_Flip(screen);
 
 			frameCount++;
 			if (frameCount % 500 == 0)
 				printf("Average FPS: %.2f\n", 1000.0f*frameCount / (SDL_GetTicks() - startTime));
+			SDL_Delay(12);
 		}
 
 		printf("Average FPS: %.2f\n", 1000.0f*frameCount / (SDL_GetTicks() - startTime));
@@ -277,7 +278,7 @@ int main(int argc, char* argv[])
 	}
 
 	GPU_Quit();
-	
+
 	return 0;
 }
 

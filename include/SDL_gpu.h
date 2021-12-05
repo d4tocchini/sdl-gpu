@@ -7,11 +7,14 @@
 #include <math.h> // Must be included before SDL.h, otherwise both try to define M_PI and we get a warning
 
 #include "SDL.h"
+// #include <SDL2/SDL.h>
+
 #include <stdio.h>
 #include <stdarg.h>
 
 // Use SDL's DLL defines
 #include "begin_code.h"
+// #include <SDL2/begin_code.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -90,7 +93,7 @@ extern "C" {
 #define GPU_PAD_1_TO_64 char _padding[1];
 #define GPU_PAD_2_TO_64 char _padding[2];
 #define GPU_PAD_3_TO_64 char _padding[3];
-#define GPU_PAD_4_TO_64 
+#define GPU_PAD_4_TO_64
 #define GPU_PAD_5_TO_64 char _padding[1];
 #define GPU_PAD_6_TO_64 char _padding[2];
 #define GPU_PAD_7_TO_64 char _padding[3];
@@ -132,7 +135,7 @@ typedef struct GPU_Target GPU_Target;
 
 /*! \ingroup Rendering
  * A struct representing a rectangular area with floating point precision.
- * \see GPU_MakeRect() 
+ * \see GPU_MakeRect()
  */
 typedef struct GPU_Rect
 {
@@ -170,7 +173,7 @@ typedef struct GPU_RendererID
     GPU_RendererEnum renderer;
     int major_version;
     int minor_version;
-	
+
 	GPU_PAD_4_TO_64
 } GPU_RendererID;
 
@@ -229,13 +232,13 @@ typedef struct GPU_BlendMode
     GPU_BlendFuncEnum dest_color;
     GPU_BlendFuncEnum source_alpha;
     GPU_BlendFuncEnum dest_alpha;
-    
+
     GPU_BlendEqEnum color_equation;
     GPU_BlendEqEnum alpha_equation;
 } GPU_BlendMode;
 
 /*! \ingroup ImageControls
- * Blend mode presets 
+ * Blend mode presets
  * \see GPU_SetBlendMode()
  * \see GPU_GetBlendModeFromPreset()
  */
@@ -254,7 +257,7 @@ typedef enum {
 } GPU_BlendPresetEnum;
 
 /*! \ingroup ImageControls
- * Image filtering options.  These affect the quality/interpolation of colors when images are scaled. 
+ * Image filtering options.  These affect the quality/interpolation of colors when images are scaled.
  * \see GPU_SetImageFilter()
  */
 typedef enum {
@@ -336,26 +339,26 @@ typedef struct GPU_Image
 	GPU_Target* context_target;
 	GPU_Target* target;
 	void* data;
-	
+
 	Uint16 w, h;
 	GPU_FormatEnum format;
 	int num_layers;
 	int bytes_per_pixel;
 	Uint16 base_w, base_h;  // Original image dimensions
 	Uint16 texture_w, texture_h;  // Underlying texture dimensions
-	
+
 	float anchor_x; // Normalized coords for the point at which the image is blitted.  Default is (0.5, 0.5), that is, the image is drawn centered.
 	float anchor_y; // These are interpreted according to GPU_SetCoordinateMode() and range from (0.0 - 1.0) normally.
-	
+
 	SDL_Color color;
 	GPU_BlendMode blend_mode;
 	GPU_FilterEnum filter_mode;
 	GPU_SnapEnum snap_mode;
 	GPU_WrapEnum wrap_mode_x;
 	GPU_WrapEnum wrap_mode_y;
-	
+
 	int refcount;
-	
+
 	GPU_bool using_virtual_resolution;
 	GPU_bool has_mipmaps;
 	GPU_bool use_blending;
@@ -372,8 +375,8 @@ typedef uintptr_t GPU_TextureHandle;
 
 /*! \ingroup TargetControls
  * Camera object that determines viewing transform.
- * \see GPU_SetCamera() 
- * \see GPU_GetDefaultCamera() 
+ * \see GPU_SetCamera()
+ * \see GPU_GetDefaultCamera()
  * \see GPU_GetCamera()
  */
 typedef struct GPU_Camera
@@ -383,7 +386,7 @@ typedef struct GPU_Camera
 	float zoom_x, zoom_y;
 	float z_near, z_far;  // z clipping planes
 	GPU_bool use_centered_origin;  // move rotation/scaling origin to the center of the camera's view
-	
+
 	GPU_PAD_7_TO_64
 } GPU_Camera;
 
@@ -427,54 +430,54 @@ typedef struct GPU_Context
 {
     /*! SDL_GLContext */
     void* context;
-	
+
 	/*! Last target used */
 	GPU_Target* active_target;
-	
+
     GPU_ShaderBlock current_shader_block;
     GPU_ShaderBlock default_textured_shader_block;
     GPU_ShaderBlock default_untextured_shader_block;
-	
-    
+
+
     /*! SDL window ID */
 	Uint32 windowID;
-	
+
 	/*! Actual window dimensions */
 	int window_w;
 	int window_h;
-	
+
 	/*! Drawable region dimensions */
 	int drawable_w;
 	int drawable_h;
-	
+
 	/*! Window dimensions for restoring windowed mode after GPU_SetFullscreen(1,1). */
 	int stored_window_w;
 	int stored_window_h;
-	
+
 	/*! Shader handles used in the default shader programs */
 	Uint32 default_textured_vertex_shader_id;
 	Uint32 default_textured_fragment_shader_id;
 	Uint32 default_untextured_vertex_shader_id;
 	Uint32 default_untextured_fragment_shader_id;
-	
-	
-	
+
+
+
 	/*! Internal state */
 	Uint32 current_shader_program;
 	Uint32 default_textured_shader_program;
 	Uint32 default_untextured_shader_program;
-	
+
 	GPU_BlendMode shapes_blend_mode;
 	float line_thickness;
-    
+
 	int refcount;
-	
+
 	void* data;
-	
+
     GPU_bool failed;
 	GPU_bool use_texturing;
 	GPU_bool shapes_use_blending;
-	
+
 	GPU_PAD_5_TO_64
 } GPU_Context;
 
@@ -499,9 +502,9 @@ struct GPU_Target
 	Uint16 base_w, base_h;  // The true dimensions of the underlying image or window
 	GPU_Rect clip_rect;
 	SDL_Color color;
-	
+
 	GPU_Rect viewport;
-	
+
 	/*! Perspective and object viewing transforms. */
 	int matrix_mode;
 	GPU_MatrixStack projection_matrix;
@@ -509,23 +512,23 @@ struct GPU_Target
 	GPU_MatrixStack model_matrix;
 
 	GPU_Camera camera;
-	
+
 	GPU_bool using_virtual_resolution;
 	GPU_bool use_clip_rect;
 	GPU_bool use_color;
 	GPU_bool use_camera;
 
-	
+
 	GPU_ComparisonEnum depth_function;
-	
+
 	/*! Renderer context data.  NULL if the target does not represent a window or rendering context. */
 	GPU_Context* context;
 	int refcount;
-	
+
 	GPU_bool use_depth_test;
 	GPU_bool use_depth_write;
 	GPU_bool is_alias;
-	
+
 	GPU_PAD_1_TO_64
 };
 
@@ -594,7 +597,7 @@ static const GPU_PrimitiveEnum GPU_TRIANGLES = 0x4;
 static const GPU_PrimitiveEnum GPU_TRIANGLE_STRIP = 0x5;
 static const GPU_PrimitiveEnum GPU_TRIANGLE_FAN = 0x6;
 
- 
+
 /*! Bit flags for geometry batching.
  * \see GPU_TriangleBatch()
  * \see GPU_TriangleBatchX()
@@ -691,7 +694,7 @@ typedef struct GPU_AttributeFormat
     int offset_bytes;  // Number of bytes to skip at the beginning of 'values'
     GPU_bool is_per_sprite;  // Per-sprite values are expanded to 4 vertices
     GPU_bool normalize;
-	
+
 	GPU_PAD_2_TO_32
 } GPU_AttributeFormat;
 
@@ -701,7 +704,7 @@ typedef struct GPU_Attribute
     void* values;  // Expect 4 values for each sprite
     GPU_AttributeFormat format;
     int location;
-	
+
 	GPU_PAD_4_TO_64
 } GPU_Attribute;
 
@@ -710,7 +713,7 @@ typedef struct GPU_AttributeSource
 {
     void* next_value;
     void* per_vertex_storage;  // Could point to the attribute's values or to allocated storage
-	
+
     int num_values;
     // Automatic storage format
     int per_vertex_storage_stride_bytes;
@@ -718,7 +721,7 @@ typedef struct GPU_AttributeSource
     int per_vertex_storage_size;  // Over 0 means that the per-vertex storage has been automatically allocated
     GPU_Attribute attribute;
     GPU_bool enabled;
-	
+
 	GPU_PAD_7_TO_64
 } GPU_AttributeSource;
 
@@ -744,7 +747,7 @@ typedef struct GPU_ErrorObject
     char* function;
     char* details;
     GPU_ErrorEnum error;
-	
+
 	GPU_PAD_4_TO_64
 } GPU_ErrorObject;
 
@@ -785,24 +788,24 @@ struct GPU_Renderer
 	GPU_RendererID requested_id;
 	GPU_WindowFlagEnum SDL_init_flags;
 	GPU_InitFlagEnum GPU_init_flags;
-	
+
 	GPU_ShaderLanguageEnum shader_language;
 	int min_shader_version;
 	int max_shader_version;
     GPU_FeatureEnum enabled_features;
-	
+
 	/*! Current display target */
 	GPU_Target* current_context_target;
-	
+
 	/*! Default is (0.5, 0.5) - images draw centered. */
 	float default_image_anchor_x;
 	float default_image_anchor_y;
-	
+
 	struct GPU_RendererImpl* impl;
-	
+
 	/*! 0 for inverted, 1 for mathematical */
 	GPU_bool coordinate_mode;
-	
+
 	GPU_PAD_7_TO_64
 };
 
@@ -859,12 +862,12 @@ DECLSPEC void SDLCALL GPU_SetRendererOrder(int order_size, GPU_RendererID* order
 /*! Initializes SDL's video subsystem (if necessary) and all of SDL_gpu's internal structures.
  * Chooses a renderer and creates a window with the given dimensions and window creation flags.
  * A pointer to the resulting window's render target is returned.
- * 
+ *
  * \param w Desired window width in pixels
  * \param h Desired window height in pixels
  * \param SDL_flags The bit flags to pass to SDL when creating the window.  Use GPU_DEFAULT_INIT_FLAGS if you don't care.
  * \return On success, returns the new context target (i.e. render target backed by a window).  On failure, returns NULL.
- * 
+ *
  * Initializes these systems:
  *  The 'error queue': Stores error codes and description strings.
  *  The 'renderer registry': An array of information about the supported renderers on the current platform,
@@ -890,7 +893,7 @@ DECLSPEC GPU_Target* SDLCALL GPU_InitRenderer(GPU_RendererEnum renderer_enum, Ui
  */
 DECLSPEC GPU_Target* SDLCALL GPU_InitRendererByID(GPU_RendererID renderer_request, Uint16 w, Uint16 h, GPU_WindowFlagEnum SDL_flags);
 
-/*! Checks for important GPU features which may not be supported depending on a device's extension support.  Feature flags (GPU_FEATURE_*) can be bitwise OR'd together. 
+/*! Checks for important GPU features which may not be supported depending on a device's extension support.  Feature flags (GPU_FEATURE_*) can be bitwise OR'd together.
  * \return 1 if all of the passed features are enabled/supported
  * \return 0 if any of the passed features are disabled/unsupported
  */
@@ -1084,11 +1087,11 @@ DECLSPEC void SDLCALL GPU_SetShapeBlendFunction(GPU_BlendFuncEnum source_color, 
 
 /*! Sets the blending component equations for shape rendering. */
 DECLSPEC void SDLCALL GPU_SetShapeBlendEquation(GPU_BlendEqEnum color_equation, GPU_BlendEqEnum alpha_equation);
-	
+
 /*! Sets the blending mode for shape rendering on the current window, if supported by the renderer. */
 DECLSPEC void SDLCALL GPU_SetShapeBlendMode(GPU_BlendPresetEnum mode);
 
-/*! Sets the thickness of lines for the current context. 
+/*! Sets the thickness of lines for the current context.
  * \param thickness New line thickness in pixels measured across the line.  Default is 1.0f.
  * \return The old thickness value
  */
@@ -1106,8 +1109,8 @@ DECLSPEC float SDLCALL GPU_GetLineThickness(void);
 
 /*! \ingroup TargetControls
  *  @{ */
- 
- 
+
+
 
 /*! Creates a target that aliases the given target.  Aliases can be used to store target settings (e.g. viewports) for easy switching.
  * GPU_FreeTarget() frees the alias's memory, but does not affect the original. */
@@ -1200,28 +1203,28 @@ DECLSPEC GPU_bool SDLCALL GPU_IntersectRect(GPU_Rect A, GPU_Rect B, GPU_Rect* re
  */
 DECLSPEC GPU_bool SDLCALL GPU_IntersectClipRect(GPU_Target* target, GPU_Rect B, GPU_Rect* result);
 
-/*! Sets the modulation color for subsequent drawing of images and shapes on the given target. 
+/*! Sets the modulation color for subsequent drawing of images and shapes on the given target.
  *  This has a cumulative effect with the image coloring functions.
  *  e.g. GPU_SetRGB(image, 255, 128, 0); GPU_SetTargetRGB(target, 128, 128, 128);
  *  Would make the image draw with color of roughly (128, 64, 0).
  */
 DECLSPEC void SDLCALL GPU_SetTargetColor(GPU_Target* target, SDL_Color color);
 
-/*! Sets the modulation color for subsequent drawing of images and shapes on the given target. 
+/*! Sets the modulation color for subsequent drawing of images and shapes on the given target.
  *  This has a cumulative effect with the image coloring functions.
  *  e.g. GPU_SetRGB(image, 255, 128, 0); GPU_SetTargetRGB(target, 128, 128, 128);
  *  Would make the image draw with color of roughly (128, 64, 0).
  */
 DECLSPEC void SDLCALL GPU_SetTargetRGB(GPU_Target* target, Uint8 r, Uint8 g, Uint8 b);
 
-/*! Sets the modulation color for subsequent drawing of images and shapes on the given target. 
+/*! Sets the modulation color for subsequent drawing of images and shapes on the given target.
  *  This has a cumulative effect with the image coloring functions.
  *  e.g. GPU_SetRGB(image, 255, 128, 0); GPU_SetTargetRGB(target, 128, 128, 128);
  *  Would make the image draw with color of roughly (128, 64, 0).
  */
 DECLSPEC void SDLCALL GPU_SetTargetRGBA(GPU_Target* target, Uint8 r, Uint8 g, Uint8 b, Uint8 a);
 
-/*! Unsets the modulation color for subsequent drawing of images and shapes on the given target. 
+/*! Unsets the modulation color for subsequent drawing of images and shapes on the given target.
  *  This has the same effect as coloring with pure opaque white (255, 255, 255, 255).
  */
 DECLSPEC void SDLCALL GPU_UnsetTargetColor(GPU_Target* target);
@@ -1899,7 +1902,7 @@ DECLSPEC void SDLCALL GPU_Polygon(GPU_Target* target, unsigned int num_vertices,
  * \param close_loop Make a closed polygon by drawing a line at the end back to the start point
  */
 DECLSPEC void SDLCALL GPU_Polyline(GPU_Target* target, unsigned int num_vertices, float* vertices, SDL_Color color, GPU_bool close_loop);
-	
+
 /*! Renders a colored filled polygon.  The vertices are expected to define a convex polygon.
  * \param target The destination render target
  * \param num_vertices Number of vertices (x and y pairs)
@@ -2061,6 +2064,7 @@ DECLSPEC void SDLCALL GPU_SetAttributeSource(int num_values, GPU_Attribute sourc
 }
 #endif
 
+// #include <SDL2/close_code.h>
 #include "close_code.h"
 
 

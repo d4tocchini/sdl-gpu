@@ -104,18 +104,18 @@ endif()
 option(INSTALL_LIBRARY "Install SDL_gpu libs, includes, and CMake scripts" ${DEFAULT_INSTALL_LIBRARY})
 #option(BUILD_DEBUG "Build with debugging symbols" ON)
 option(BUILD_DEMOS "Build SDL_gpu demo programs" ${DEFAULT_BUILD_DEMOS})
-option(BUILD_TESTS "Build SDL_gpu test programs" OFF)
+option(BUILD_TESTS "Build SDL_gpu test programs" ON)
 option(BUILD_VIDEO_TEST "Build SDL_gpu video test program (requires FFMPEG)" OFF)
-option(BUILD_TOOLS "Build SDL_gpu tool programs" OFF)
+option(BUILD_TOOLS "Build SDL_gpu tool programs" ON)
 option(BUILD_DOCS "Build SDL_gpu documentation" OFF)
 option(USE_SDL1 "Use SDL 1.2 headers and library instead of SDL 2" OFF)
 option(DISABLE_OPENGL "Disable OpenGL renderers.  Overrides specific OpenGL renderer flags." ${DEFAULT_DISABLE_OPENGL})
 option(DISABLE_GLES "Disable OpenGLES renderers.  Overrides specific GLES renderer flags." ${DEFAULT_DISABLE_GLES})
-option(DISABLE_OPENGL_1_BASE "Disable OpenGL 1 BASE renderer" OFF)
-option(DISABLE_OPENGL_1 "Disable OpenGL 1.X renderer" OFF)
-option(DISABLE_OPENGL_2 "Disable OpenGL 2.X renderer" OFF)
+option(DISABLE_OPENGL_1_BASE "Disable OpenGL 1 BASE renderer" ON)
+option(DISABLE_OPENGL_1 "Disable OpenGL 1.X renderer" ON)
+option(DISABLE_OPENGL_2 "Disable OpenGL 2.X renderer" ON)
 option(DISABLE_OPENGL_3 "Disable OpenGL 3.X renderer" OFF)
-option(DISABLE_OPENGL_4 "Disable OpenGL 4.X renderer" OFF)
+option(DISABLE_OPENGL_4 "Disable OpenGL 4.X renderer" ON)
 option(DISABLE_GLES_1 "Disable OpenGLES 1.X renderer" OFF)
 option(DISABLE_GLES_2 "Disable OpenGLES 2.X renderer" OFF)
 option(DISABLE_GLES_3 "Disable OpenGLES 3.X renderer" OFF)
@@ -254,7 +254,7 @@ if (DISABLE_GLES)
 else (DISABLE_GLES)
 
 	if(ANDROID)
-	
+
 		if (NOT DISABLE_GLES_1)
 			find_library( ANDROID_GLES1_LIBRARY GLESv1_CM )
 			link_libraries(
@@ -286,7 +286,7 @@ else (DISABLE_GLES)
 	if (DISABLE_GLES_3)
 		add_definitions("-DSDL_GPU_DISABLE_GLES_3")
 	endif (DISABLE_GLES_3)
-    
+
     include_directories(src/externals/gl3stub)
     if (DYNAMIC_GLES_3)
         SET(SDL_gpu_HDRS ${SDL_gpu_HDRS} externals/gl3stub/gl3stub.c externals/gl3stub/gl3stub.h)
@@ -322,11 +322,11 @@ endif(NOT GLEW_FOUND)
 # Set stuff up for using bundled stbi
 if(NOT STBI_FOUND OR NOT STBI_WRITE_FOUND)
   add_definitions("-DSTBI_FAILURE_USERMSG")
-  
+
 	if(NOT STBI_FOUND)
 	  include_directories(src/externals/stb_image)
 	endif(NOT STBI_FOUND)
-	
+
 	if(NOT STBI_WRITE_FOUND)
 	  include_directories(src/externals/stb_image_write)
 	endif(NOT STBI_WRITE_FOUND)

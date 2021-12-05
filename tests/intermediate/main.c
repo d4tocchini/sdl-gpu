@@ -124,6 +124,11 @@ int main(int argc, char* argv[])
                             filter_mode = GPU_FILTER_LINEAR;
                             GPU_LogError("GPU_FILTER_LINEAR\n");
                         }
+                        else if (filter_mode == GPU_FILTER_LINEAR)
+                        {
+                            filter_mode = GPU_FILTER_LINEAR_MIPMAP;
+                            GPU_LogError("GPU_FILTER_LINEAR_MIPMAP\n");
+                        }
                         else
                         {
                             filter_mode = GPU_FILTER_NEAREST;
